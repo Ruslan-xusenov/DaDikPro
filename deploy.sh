@@ -32,8 +32,9 @@ if [ "$CHOICE" == "2" ]; then
 
     echo -e "${GREEN}>>> Yangidan o'rnatish boshlanmoqda...${NC}"
     
+    # Firewall sozlanmagan bo'lsa
     sudo apt update
-    sudo apt install -y python3-pip python3-venv git gettext nginx redis-server postgresql postgresql-contrib libpq-dev
+    sudo apt install -y python3-pip python3-venv git gettext nginx redis-server postgresql postgresql-contrib libpq-dev certbot python3-certbot-nginx
     
     # Firewall sozlamalari
     echo -e "${GREEN}>>> Firewall sozlanmoqda...${NC}"
@@ -123,10 +124,11 @@ EOF"
 
     # Nginx config
     echo -e "${GREEN}>>> Nginx config yaratilmoqda...${NC}"
+    DOMAIN="sms.ruslandev.uz"
     sudo bash -c "cat > /etc/nginx/sites-available/$PROJECT_NAME <<EOF
 server {
     listen 80;
-    server_name 91.107.215.217;
+    server_name \$DOMAIN www.\$DOMAIN;
 
     client_max_body_size 100M;
 
@@ -152,7 +154,13 @@ EOF"
     sudo ln -sf /etc/nginx/sites-available/$PROJECT_NAME /etc/nginx/sites-enabled/
     sudo nginx -t && sudo systemctl restart nginx
 
-    echo -e "${GREEN}>>> Muvaffaqiyatli yakunlandi! Sayt manzili: http://91.107.215.217${NC}"
+    echo -e "${GREEN}>>> SSL (HTTPS) o'rnatishni xohlaysizmi? (y/n)${NC}"
+    read SSL_CHOICE
+    if [ "$SSL_CHOICE" == "y" ]; then
+        sudo certbot --nginx -d $DOMAIN -d www.$DOMAIN
+    fi
+
+    echo -e "${GREEN}>>> Muvaffaqiyatli yakunlandi! Sayt manzili: http://$DOMAIN${NC}"
 
 elif [ "$CHOICE" == "1" ]; then
     echo -e "${GREEN}>>> Yangilanish boshlanmoqda...${NC}"

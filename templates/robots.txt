@@ -6,4 +6,4 @@ Disallow: /logout/
 Disallow: /register/
 Disallow: /i18n/
 
-Sitemap: http://91.107.215.217/sitemap.xml
+Sitemap: https://sms.ruslandev.uz/sitemap.xml
