@@ -65,7 +65,7 @@ if [ "$CHOICE" == "2" ]; then
         
         echo -e "${GREEN}>>> Database sozlanmoqda...${NC}"
         sudo -u postgres psql -c "CREATE DATABASE $DB_NAME;" || echo "Database allaqachon mavjud"
-        sudo -u postgres psql -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PASS';" || echo "User allaqachon mavjud"
+        sudo -u postgres psql -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PASS';" || sudo -u postgres psql -c "ALTER USER $DB_USER WITH PASSWORD '$DB_PASS';"
         sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
         sudo -u postgres psql -c "ALTER ROLE $DB_USER SET default_transaction_isolation TO 'read committed';"
         sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC';"
