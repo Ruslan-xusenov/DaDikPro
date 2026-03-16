@@ -32,9 +32,15 @@ if [ "$CHOICE" == "2" ]; then
 
     echo -e "${GREEN}>>> Yangidan o'rnatish boshlanmoqda...${NC}"
     
-    # Firewall sozlanmagan bo'lsa
+    # Python 3.12 o'rnatish (Ubuntu 22.04 uchun)
+    echo -e "${GREEN}>>> Python 3.12 o'rnatilmoqda...${NC}"
     sudo apt update
-    sudo apt install -y python3-pip python3-venv git gettext nginx redis-server postgresql postgresql-contrib libpq-dev certbot python3-certbot-nginx
+    sudo apt install -y software-properties-common
+    sudo add-apt-repository -y ppa:deadsnakes/ppa
+    sudo apt update
+    sudo apt install -y python3.12 python3.12-venv python3.12-dev
+    
+    sudo apt install -y git gettext nginx redis-server postgresql postgresql-contrib libpq-dev certbot python3-certbot-nginx
     
     # Firewall sozlamalari
     echo -e "${GREEN}>>> Firewall sozlanmoqda...${NC}"
@@ -49,10 +55,11 @@ if [ "$CHOICE" == "2" ]; then
     git clone $GITHUB_URL $PROJECT_DIR
     cd $PROJECT_DIR
 
-    $PYTHON_VERSION -m venv venv
+    # Python 3.12 bilan venv yaratish
+    python3.12 -m venv venv
     source venv/bin/activate
 
-    pip install --upgrade pip
+    python -m pip install --upgrade pip
     pip install -r requirements.txt
     pip install gunicorn
 
