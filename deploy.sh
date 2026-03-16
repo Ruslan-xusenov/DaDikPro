@@ -1,6 +1,11 @@
 PROJECT_NAME="dadikpro"
 GITHUB_URL="https://github.com/Ruslan-xusenov/DaDikPro.git"
-PROJECT_DIR="/home/$(whoami)/$PROJECT_NAME"
+if [ "$(whoami)" == "root" ]; then
+    HOME_DIR="/root"
+else
+    HOME_DIR="/home/$(whoami)"
+fi
+PROJECT_DIR="$HOME_DIR/$PROJECT_NAME"
 PYTHON_VERSION="python3"
 
 RED='\033[0;31m'
@@ -28,7 +33,7 @@ if [ "$CHOICE" == "2" ]; then
     echo -e "${GREEN}>>> Yangidan o'rnatish boshlanmoqda...${NC}"
     
     sudo apt update
-    sudo apt install -y python3-pip python3-venv git gettext nginx redis-server
+    sudo apt install -y python3-pip python3-venv git gettext nginx redis-server postgresql postgresql-contrib libpq-dev
 
     if [ -d "$PROJECT_DIR" ]; then
         rm -rf "$PROJECT_DIR"
@@ -44,14 +49,37 @@ if [ "$CHOICE" == "2" ]; then
     pip install -r requirements.txt
     pip install gunicorn
 
+    if [ -f ".env" ]; then
+        mv .env .env.bak
+        echo -e "${GREEN}>>> Eski .env fayli .env.bak nomi bilan saqlandi.${NC}"
+    fi
+
     if [ ! -f ".env" ]; then
         echo "SECRET_KEY=django-insecure-$(openssl rand -base64 32)" > .env
         echo "DEBUG=False" >> .env
-        echo "DATABASE_URL=sqlite:///db.sqlite3" >> .env
         
-        echo -e "${GREEN}>>> .env fayli yaratildi. Eskiz sozlamalarini kiriting:${NC}"
-        read -p "ESKIZ_EMAIL: " ESKIZ_EMAIL
-        read -p "ESKIZ_PASSWORD: " ESKIZ_PASSWORD
+        # PostgreSQL sozlamalari
+        DB_NAME="dadikpro"
+        DB_USER="dadikuser"
+        DB_PASS=$(openssl rand -base64 12)
+        
+        echo -e "${GREEN}>>> Database sozlanmoqda...${NC}"
+        sudo -u postgres psql -c "CREATE DATABASE $DB_NAME;" || echo "Database allaqachon mavjud"
+        sudo -u postgres psql -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PASS';" || echo "User allaqachon mavjud"
+        sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
+        sudo -u postgres psql -c "ALTER ROLE $DB_USER SET default_transaction_isolation TO 'read committed';"
+        sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC';"
+        sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME TO $DB_USER;"
+        sudo -u postgres psql -c "ALTER DATABASE $DB_NAME OWNER TO $DB_USER;"
+
+        echo "DATABASE_URL=postgres://$DB_USER:$DB_PASS@localhost:5432/$DB_NAME" >> .env
+        
+        echo -e "${GREEN}>>> .env fayli yaratildi.${NC}"
+        # Eskiz ma'lumotlarini oling
+        if [ "$ESKIZ_EMAIL" == "" ]; then
+            read -p "ESKIZ_EMAIL: " ESKIZ_EMAIL
+            read -p "ESKIZ_PASSWORD: " ESKIZ_PASSWORD
+        fi
         echo "ESKIZ_EMAIL=$ESKIZ_EMAIL" >> .env
         echo "ESKIZ_PASSWORD=$ESKIZ_PASSWORD" >> .env
         echo "ESKIZ_SENDER=4546" >> .env
@@ -128,13 +156,12 @@ elif [ "$CHOICE" == "1" ]; then
 
     pip install -r requirements.txt
     
-    python manage.py migrate
+    python manage.py migrate || echo -e "${RED}Xatolik: Migratsiya amalga oshmadi. Baza sozlamalarini tekshiring.${NC}"
     
     python manage.py collectstatic --noinput
     
     python manage.py compilemessages
 
-    # Service qayta ishga tushirish
     sudo systemctl daemon-reload
     sudo systemctl restart $PROJECT_NAME
     sudo systemctl restart nginx
