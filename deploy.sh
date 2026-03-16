@@ -1,7 +1,7 @@
 PROJECT_NAME="dadikpro"
 GITHUB_URL="https://github.com/Ruslan-xusenov/DaDikPro.git"
 if [ "$(whoami)" == "root" ]; then
-    HOME_DIR="/root"
+    HOME_DIR="/var/www"
 else
     HOME_DIR="/home/$(whoami)"
 fi
@@ -34,6 +34,12 @@ if [ "$CHOICE" == "2" ]; then
     
     sudo apt update
     sudo apt install -y python3-pip python3-venv git gettext nginx redis-server postgresql postgresql-contrib libpq-dev
+    
+    # Firewall sozlamalari
+    echo -e "${GREEN}>>> Firewall sozlanmoqda...${NC}"
+    sudo ufw allow 'Nginx Full'
+    sudo ufw allow 22
+    echo "y" | sudo ufw enable
 
     if [ -d "$PROJECT_DIR" ]; then
         rm -rf "$PROJECT_DIR"
@@ -107,6 +113,9 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF"
+
+    # Socket fayli uchun ruxsatlar
+    sudo chmod 755 $HOME_DIR
 
     sudo systemctl daemon-reload
     sudo systemctl start $PROJECT_NAME
