@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Tizimga kirish — Dadik Pro{% endblock %}
+
+{% block content %}
+<section style="min-height: 90vh; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 0% 0%, #f8fafc 0%, #f1f5f9 100%); padding: 40px 0;">
+    <div style="width: 100%; max-width: 480px; position: relative;">
+        <!-- Background Decorations -->
+        <div style="position: absolute; -z-index: -1; width: 200px; height: 200px; background: rgba(200, 155, 60, 0.05); border-radius: 50%; top: -50px; left: -50px; filter: blur(40px);"></div>
+        <div style="position: absolute; -z-index: -1; width: 150px; height: 150px; background: rgba(200, 155, 60, 0.05); border-radius: 50%; bottom: -30px; right: -30px; filter: blur(30px);"></div>
+
+        <div class="card animate-fade-in" style="padding: 60px; border-radius: 40px; border: none; box-shadow: var(--shadow-premium); background: white;">
+            <div style="text-align: center; margin-bottom: 48px;">
+                <div style="width: 80px; height: 80px; background: var(--primary-light); color: var(--primary); border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 24px; transform: rotate(-10deg); transition: transform 0.3s ease;" onmouseover="this.style.transform='rotate(0deg) scale(1.1)'" onmouseout="this.style.transform='rotate(-10deg)'">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h2 style="font-size: 2.25rem; font-weight: 900; color: var(--text-dark); letter-spacing: -1px; margin-bottom: 12px;">Xush kelibsiz!</h2>
+                <p style="color: var(--text-muted); font-weight: 600; font-size: 0.95rem;">Dadik Pro boshqaruv paneliga kirish</p>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                <div style="margin-bottom: 24px;">
+                    <label style="font-weight: 800; color: var(--text-dark); display: block; margin-bottom: 12px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Login</label>
+                    <div style="position: relative;">
+                        <i class="far fa-user" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 1rem;"></i>
+                        <input type="text" name="username" class="form-control" placeholder="admin" required style="padding: 18px 20px 18px 56px; border-radius: 16px; border: 1px solid #e2e8f0; width: 100%; font-weight: 500; font-size: 1rem; background: #f8fafc;">
+                    </div>
+                </div>
+                <div style="margin-bottom: 32px;">
+                    <label style="font-weight: 800; color: var(--text-dark); display: block; margin-bottom: 12px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Parol</label>
+                    <div style="position: relative;">
+                        <i class="far fa-eye-slash" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 1rem;"></i>
+                        <input type="password" name="password" class="form-control" placeholder="••••••••" required style="padding: 18px 20px 18px 56px; border-radius: 16px; border: 1px solid #e2e8f0; width: 100%; font-weight: 500; font-size: 1rem; background: #f8fafc;">
+                    </div>
+                </div>
+                
+                {% if form.errors %}
+                <div style="padding: 16px; border-radius: 12px; background: #fff1f2; color: #be123c; font-size: 0.85rem; margin-bottom: 32px; text-align: center; font-weight: 700; border: 1px solid #fda4af;">
+                    <i class="fas fa-exclamation-circle" style="margin-right: 8px;"></i> Login yoki parol xato kiritildi.
+                </div>
+                {% endif %}
+
+                <button type="submit" class="btn-primary" style="width: 100%; padding: 20px; border-radius: 16px; font-weight: 800; font-size: 1.1rem; box-shadow: 0 10px 20px rgba(200, 155, 60, 0.2);">
+                    Tizimga kirish <i class="fas fa-sign-in-alt" style="margin-left: 10px;"></i>
+                </button>
+            </form>
+            
+            <div style="margin-top: 40px; text-align: center; padding-top: 30px; border-top: 1px solid #f1f5f9; color: var(--text-muted); font-size: 0.85rem; font-weight: 600;">
+                <p>Demo accounts: <span style="color: var(--primary); font-weight: 800;">admin</span> / <span style="color: var(--primary); font-weight: 800;">123</span></p>
+            </div>
+        </div>
+        
+        <div style="margin-top: 32px; text-align: center;">
+            <a href="{% url 'home' %}" style="color: var(--text-muted); font-weight: 700; font-size: 0.9rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                <i class="fas fa-arrow-left"></i> Bosh sahifaga qaytish
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

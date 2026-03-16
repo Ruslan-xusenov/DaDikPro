@@ -1,0 +1,134 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% load static %}
+
+{% block dashboard_page_title %}Tahliliy sharh{% endblock %}
+
+{% block dashboard_content %}
+<div class="stats-grid responsive-grid-3" style="margin-bottom: 48px;">
+    <div class="stat-card">
+        <div class="stat-icon" style="background: var(--primary-light); color: var(--primary);">
+            <i class="fas fa-users-viewfinder"></i>
+        </div>
+        <div class="stat-info">
+            <h4 class="stat-label">Jami mijozlar</h4>
+            <div class="counter stat-value" data-target="{{ total_customers }}">0</div>
+        </div>
+    </div>
+    <div class="stat-card" style="animation-delay: 0.1s;">
+        <div class="stat-icon" style="background: #fffbeb; color: #d97706;">
+            <i class="fas fa-user-plus"></i>
+        </div>
+        <div class="stat-info">
+            <h4 class="stat-label">Bugun qo'shilganlar</h4>
+            <div class="counter stat-value" data-target="{{ new_today }}">0</div>
+        </div>
+    </div>
+    <div class="stat-card" style="animation-delay: 0.2s;">
+        <div class="stat-icon" style="background: #f0fdf4; color: #22c55e;">
+            <i class="fas fa-paper-plane-o"></i>
+        </div>
+        <div class="stat-info">
+            <h4 class="stat-label">Yuborilgan SMS</h4>
+            <div class="counter stat-value" data-target="{{ total_sms }}">0</div>
+        </div>
+    </div>
+</div>
+
+<div class="responsive-grid-2" style="grid-template-columns: 2fr 1fr;">
+    <!-- Recent Customers -->
+    <div class="card">
+        <div style="padding: 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9;">
+            <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--text-dark);">So'nggi mijozlar</h3>
+            <a href="{% url 'admin_customers' %}" class="btn-primary" style="padding: 10px 20px; font-size: 0.85rem;">Barchasi</a>
+        </div>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>MIJOZ ID</th>
+                    <th>F.I.SH</th>
+                    <th>TELEFON</th>
+                    <th>BALLAR</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for customer in recent_customers %}
+                <tr>
+                    <td style="font-family: monospace; color: var(--primary); font-weight: 800;">#{{ customer.id|stringformat:"05d" }}</td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="width: 36px; height: 36px; border-radius: 12px; background: #f1f5f9; color: var(--text-dark); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; border: 1px solid #e2e8f0;">
+                                {{ customer.name|slice:":1" }}
+                            </div>
+                            <span style="font-weight: 700;">{{ customer.name }}</span>
+                        </div>
+                    </td>
+                    <td style="color: var(--text-muted);">{{ customer.phone }}</td>
+                    <td>
+                        <span style="background: var(--primary-light); color: var(--primary); padding: 6px 14px; border-radius: 30px; font-size: 0.8rem; font-weight: 800; border: 1px solid rgba(200,155,60,0.1);">
+                            {{ customer.points }} ball
+                        </span>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 80px;">
+                        <i class="fas fa-folder-open" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.1; display: block;"></i>
+                        Mijozlar mavjud emas.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Quick Tools -->
+    <div class="card" style="background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); border: none; padding: 40px; color: white;">
+        <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 32px; color: white;">Tezkor asboblar</h3>
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            <a href="{% url 'admin_sms' %}" class="btn-primary" style="width: 100%; padding: 18px;">
+                <i class="fas fa-paper-plane"></i> SMS Kampaniya
+            </a>
+            <a href="{% url 'admin_news' %}" class="btn-primary" style="width: 100%; padding: 18px; background: #334155;">
+                <i class="fas fa-newspaper"></i> Yangiliklar
+            </a>
+            <a href="{% url 'export_customers_excel' %}" class="btn-primary" style="width: 100%; padding: 18px; background: #059669;">
+                <i class="fas fa-file-excel"></i> Excel Hisobot
+            </a>
+            
+            <div style="margin-top: 40px; padding: 24px; border-radius: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                <p style="font-size: 0.85rem; color: #94a3b8; line-height: 1.6;">
+                    Bugungi tahlillarga ko'ra, mijozlar oqimi o'tgan haftaga nisbatan <span style="color: #10b981; font-weight: 800;">+12%</span> ga oshgan.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const counters = document.querySelectorAll('.counter');
+    counters.forEach(counter => {
+        const target = +counter.getAttribute('data-target');
+        const duration = 1500;
+        const startTime = performance.now();
+        
+        const update = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            // EaseOutExpo
+            const value = progress === 1 ? target : target * (1 - Math.pow(2, -10 * progress));
+            
+            counter.innerText = Math.floor(value);
+            
+            if (progress < 1) {
+                requestAnimationFrame(update);
+            } else {
+                counter.innerText = target;
+            }
+        };
+        requestAnimationFrame(update);
+    });
+</script>
+{% endblock %}

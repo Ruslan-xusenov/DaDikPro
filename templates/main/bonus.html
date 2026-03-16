@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+
+{% block title %}Bonus tizimi — Dadik Pro{% endblock %}
+
+{% block content %}
+<section class="hero" style="padding: 120px 0; background: radial-gradient(circle at top right, var(--bg-light) 0%, var(--white) 100%); border-bottom: 1px solid var(--border-color);">
+    <div class="container" style="text-align: center;">
+        <h1 class="hero-title animate-fade-in" style="font-size: 4rem; margin-bottom: 24px;">{% trans "Sodiqlik" %} <span style="color: var(--primary); background: linear-gradient(to right, #C89B3C, #E5B54F); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">{% trans "Dasturi" %}</span></h1>
+        <p class="hero-subtitle animate-fade-in" style="animation-delay: 0.1s; max-width: 700px; margin: 0 auto; color: var(--text-muted); font-size: 1.2rem;">{% trans "Dadik Pro bilan har bir xaridingiz yanada daromadliroq bo'ladi. Ballar to'plang va ularni chegirmalarga almashtiring." %}</p>
+    </div>
+</section>
+
+<section style="padding: 100px 0; background: var(--white);">
+    <div class="container">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 80px; align-items: center;">
+            <div class="animate-fade-in">
+                <h2 style="font-size: 2.5rem; margin-bottom: 30px; color: var(--text-dark);">{% trans "Qanday qilib" %} <span style="color: var(--primary);">{% trans "tejaymiz" %}</span>?</h2>
+                <div style="display: flex; flex-direction: column; gap: 40px;">
+                    <div style="display: flex; gap: 25px;">
+                        <div style="width: 60px; height: 60px; background: var(--primary-light); color: var(--primary); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.5rem; flex-shrink: 0; box-shadow: 0 10px 15px -3px rgba(200, 155, 60, 0.05); border: 1px solid var(--border-color);">1</div>
+                        <div>
+                            <h4 style="font-size: 1.25rem; margin-bottom: 8px;">{% trans "Ro'yxatdan o'tish" %}</h4>
+                            <p style="color: var(--text-muted); line-height: 1.6;">{% trans "Platformada ro'yxatdan o'tganingiz uchun darhol 5 000 xush kelibsiz ballari hisobingizga qo'shiladi." %}</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 25px;">
+                        <div style="width: 60px; height: 60px; background: var(--primary-light); color: var(--primary); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.5rem; flex-shrink: 0; box-shadow: 0 10px 15px -3px rgba(200, 155, 60, 0.05); border: 1px solid var(--border-color);">2</div>
+                        <div>
+                            <h4 style="font-size: 1.25rem; margin-bottom: 8px;">{% trans "Faollik ko'rsating" %}</h4>
+                            <p style="color: var(--text-muted); line-height: 1.6;">{% trans "Har bir amalga oshirilgan xarid miqdoridan 2% gacha keshbek ballar ko'rinishida qaytib keladi." %}</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 25px;">
+                        <div style="width: 60px; height: 60px; background: var(--primary-light); color: var(--primary); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.5rem; flex-shrink: 0; box-shadow: 0 10px 15px -3px rgba(200, 155, 60, 0.05); border: 1px solid var(--border-color);">3</div>
+                        <div>
+                            <h4 style="font-size: 1.25rem; margin-bottom: 8px;">{% trans "Ballarni ishlating" %}</h4>
+                            <p style="color: var(--text-muted); line-height: 1.6;">{% trans "Yig'ilgan ballarni keyingi xaridlarni 50% gacha qismini to'lash uchun ishlating." %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="animate-fade-in" style="animation-delay: 0.2s; position: relative;">
+                <div style="position: absolute; top: -20px; left: -20px; width: 100px; height: 100px; background: var(--primary-light); border-radius: 50%; z-index: 0; opacity: 0.5;"></div>
+                <img src="https://images.unsplash.com/photo-1556742044-3c52d6e88c62?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Bonus points" style="width: 100%; border-radius: 40px; box-shadow: var(--shadow-lg); position: relative; z-index: 1;">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section style="padding: 100px 0; background: var(--bg-light); border-top: 1px solid var(--border-color);">
+    <div class="container">
+        <div style="text-align: center; max-width: 700px; margin: 0 auto 60px;">
+            <h2 style="font-size: 3rem; margin-bottom: 24px; color: var(--text-dark); font-weight: 900; letter-spacing: -1px;">{% trans "Maxsus" %} <span style="color: var(--primary);">{% trans "Bonuslar" %}</span></h2>
+            <p style="color: var(--text-muted); font-size: 1.1rem;">{% trans "Sodiq mijozlarimiz uchun qo'shimcha imtiyozlar." %}</p>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px;">
+            <div class="stat-card" style="padding: 40px; border-radius: 30px; text-align: center;">
+                <div style="width: 80px; height: 80px; background: var(--primary-light); color: var(--primary); border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; margin: 0 auto 30px; border: 1px solid var(--border-color);">
+                    <i class="fas fa-birthday-cake"></i>
+                </div>
+                <h3 style="font-size: 1.4rem; margin-bottom: 15px; color: var(--text-dark); font-weight: 800;">{% trans "Tug'ilgan kun hadyasi" %}</h3>
+                <p style="color: var(--text-muted);">{% trans "Tug'ilgan kuningiz munosabati bilan biz sizga 10 000 ball miqdorida sovg'a taqdim etamiz." %}</p>
+            </div>
+            <div class="stat-card" style="padding: 40px; border-radius: 30px; text-align: center;">
+                <div style="width: 80px; height: 80px; background: rgba(219, 39, 119, 0.1); color: #db2777; border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; margin: 0 auto 30px; border: 1px solid rgba(219, 39, 119, 0.1);">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <h3 style="font-size: 1.4rem; margin-bottom: 15px; color: var(--text-dark); font-weight: 800;">{% trans "VIP Status" %}</h3>
+                <p style="color: var(--text-muted); line-height: 1.6;">{% trans "Umumiy xaridlar miqdori 5 mln so'mdan oshganda, keshbek miqdori 5% gacha ko'tariladi." %}</p>
+            </div>
+            <div class="stat-card" style="padding: 40px; border-radius: 30px; text-align: center;">
+                <div style="width: 80px; height: 80px; background: rgba(5, 150, 105, 0.1); color: #059669; border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; margin: 0 auto 30px; border: 1px solid rgba(5, 150, 105, 0.1);">
+                    <i class="fas fa-users-viewfinder"></i>
+                </div>
+                <h3 style="font-size: 1.4rem; margin-bottom: 15px; color: var(--text-dark); font-weight: 800;">{% trans "Do'stingizni taklif qiling" %}</h3>
+                <p style="color: var(--text-muted); line-height: 1.6;">{% trans "Har bir taklif qilingan va birinchi xaridini amalga oshirgan do'stingiz uchun 2 000 ball oling." %}</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

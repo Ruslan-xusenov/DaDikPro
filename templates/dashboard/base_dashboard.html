@@ -1,0 +1,193 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Boshqaruv paneli — Dadik Pro{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <style>
+        .top-glass-bar {
+            background: var(--white);
+            opacity: 0.95;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 48px;
+            position: sticky;
+            top: 0;
+            z-index: 900;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: -48px -48px 48px -48px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+        }
+        
+        .theme-toggle, .lang-switcher {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            color: var(--text-dark);
+            transition: var(--transition);
+        }
+        
+        .theme-toggle:hover, .lang-switcher:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .lang-dropdown {
+            position: absolute;
+            top: 60px;
+            right: 0;
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1000;
+            min-width: 150px;
+        }
+
+        .lang-dropdown.show {
+            display: flex;
+        }
+
+        .lang-item {
+            padding: 12px 20px;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .lang-item:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .alert-success { border-left: 5px solid var(--success); }
+        .alert-danger { border-left: 5px solid var(--danger); }
+        .icon-success { color: var(--success); }
+        .icon-danger { color: var(--danger); }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="logo" style="margin-bottom: 60px;">
+            <i class="fas fa-chart-line"></i> DADIK<span>PRO</span>
+        </div>
+        <nav>
+            <a href="{% url 'dashboard' %}" class="sidebar-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                <i class="fas fa-th-large"></i> {% trans "Asosiy panel" %}
+            </a>
+            <a href="{% url 'admin_customers' %}" class="sidebar-link {% if request.resolver_match.url_name == 'admin_customers' %}active{% endif %}">
+                <i class="fas fa-users"></i> {% trans "Mijozlar" %}
+            </a>
+            <a href="{% url 'admin_sms' %}" class="sidebar-link {% if request.resolver_match.url_name == 'admin_sms' %}active{% endif %}">
+                <i class="fas fa-paper-plane"></i> {% trans "SMS Marketing" %}
+            </a>
+            <a href="{% url 'admin_add_points' %}" class="sidebar-link {% if request.resolver_match.url_name == 'admin_add_points' %}active{% endif %}">
+                <i class="fas fa-coins"></i> {% trans "Ballar boshqaruvi" %}
+            </a>
+            <a href="{% url 'admin_news' %}" class="sidebar-link {% if request.resolver_match.url_name == 'admin_news' %}active{% endif %}">
+                <i class="fas fa-newspaper"></i> {% trans "Yangiliklar" %}
+            </a>
+            <a href="{% url 'admin_banners' %}" class="sidebar-link {% if request.resolver_match.url_name == 'admin_banners' %}active{% endif %}">
+                <i class="fas fa-images"></i> {% trans "Bannerlar" %}
+            </a>
+            <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #f1f5f9;">
+                <a href="{% url 'home' %}" class="sidebar-link" target="_blank">
+                    <i class="fas fa-external-link-alt"></i> {% trans "Saytni ko'rish" %}
+                </a>
+                <form action="{% url 'logout' %}" method="POST" id="logoutForm" style="display: none;">
+                    {% csrf_token %}
+                </form>
+                <a href="javascript:void(0)" onclick="document.getElementById('logoutForm').submit();" class="sidebar-link" style="color: var(--danger);">
+                    <i class="fas fa-sign-out-alt"></i> {% trans "Chiqish" %}
+                </a>
+            </div>
+        </nav>
+    </aside>
+
+    <main class="main-wrapper">
+        <div class="top-glass-bar">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button id="sidebarToggle" style="display: none; background: none; border: none; font-size: 1.5rem; color: var(--text-dark); cursor: pointer;">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div>
+                    <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--text-dark); letter-spacing: -0.5px;">{% block dashboard_page_title %}{% trans "DASHBOARD" %}{% endblock %}</h2>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; font-weight: 600;">{% trans "Xush kelibsiz" %}, {{ user.username }}</p>
+                </div>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <div style="background: var(--white); padding: 10px 20px; border-radius: 12px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); font-weight: 700; font-size: 0.85rem;" id="currentDate">
+                    --.--.----
+                </div>
+                
+                <div style="display: flex; gap: 8px; position: relative;">
+                    <button class="lang-switcher" onclick="toggleLangDropdown()">
+                        <i class="fas fa-globe"></i>
+                    </button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <form action="{% url 'set_language' %}" method="post">
+                            {% csrf_token %}
+                            <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                            <button name="language" value="uz" class="lang-item">O'zbekcha</button>
+                            <button name="language" value="ru" class="lang-item">Русский</button>
+                            <button name="language" value="en" class="lang-item">English</button>
+                        </form>
+                    </div>
+                    <div class="theme-toggle" id="themeBtn">
+                        <i class="fas fa-moon"></i>
+                    </div>
+                </div>
+
+                <div style="width: 48px; height: 48px; background: var(--primary-light); color: var(--primary); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; border: 1px solid var(--border-color);">
+                    <i class="far fa-user"></i>
+                </div>
+            </div>
+        </div>
+
+        {% if messages %}
+            <div style="margin-bottom: 32px;">
+                {% for message in messages %}
+                    <div style="padding: 16px 24px; border-radius: 12px; background: var(--white); box-shadow: var(--shadow-md); display: flex; align-items: center; gap: 15px; margin-bottom: 12px;" class="animate-fade-in alert-{{ message.tags }}">
+                        <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %} icon-{{ message.tags }}" style="font-size: 1.2rem;"></i>
+                        <span style="font-weight: 700; color: var(--text-dark);">{{ message }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% block dashboard_content %}
+        {% endblock %}
+    </main>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    <script>
+        if (document.getElementById('currentDate')) {
+            document.getElementById('currentDate').textContent = new Date().toLocaleDateString('uz-UZ', {day:'numeric', month:'long', year:'numeric'});
+        }
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

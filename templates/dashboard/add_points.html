@@ -1,0 +1,107 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% load static %}
+
+{% block dashboard_page_title %}Ballar boshqaruvi{% endblock %}
+
+{% block dashboard_content %}
+<div class="animate-fade-in" style="max-width: 700px; margin: 0 auto;">
+    <div class="card" style="padding: 60px; border-radius: 40px; border: none; box-shadow: var(--shadow-premium);">
+        <div style="text-align: center; margin-bottom: 48px;">
+            <div style="width: 80px; height: 80px; background: #fffbeb; color: #d97706; border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 24px; transform: rotate(-10deg);">
+                <i class="fas fa-coins"></i>
+            </div>
+            <h3 style="font-size: 1.75rem; color: var(--text-dark); font-weight: 900; letter-spacing: -1px;">Mijoz Hisobini To'ldirish</h3>
+            <p style="color: var(--text-muted); font-weight: 600; margin-top: 8px;">Mijozga yangi ballarni biriktirish va rag'batlantirish</p>
+        </div>
+        
+        <form method="POST" id="addPointsForm">
+            {% csrf_token %}
+            <div style="margin-bottom: 32px;">
+                <label style="font-weight: 800; color: var(--text-dark); display: block; margin-bottom: 12px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Mijoz ID raqami</label>
+                <div style="display: flex; gap: 12px;">
+                    <div style="position: relative; flex: 1;">
+                        <i class="fas fa-hashtag" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: #94a3b8;"></i>
+                        <input type="number" name="customer_id" id="customerIdInput" class="form-control" placeholder="ID: 00124" required style="padding: 20px 20px 20px 56px; border-radius: 16px; border: 1px solid #e2e8f0; font-weight: 700; font-size: 1.1rem; background: #f8fafc;">
+                    </div>
+                    <button type="button" id="checkCustomerBtn" class="btn-secondary" style="white-space: nowrap; padding: 0 32px; border-radius: 16px; font-weight: 800; font-size: 0.9rem; border: none; background: var(--primary-light); color: var(--primary);">
+                        Tekshirish
+                    </button>
+                </div>
+            </div>
+
+            <!-- Customer Preview Card -->
+            <div id="customerPreview" style="display: none; padding: 32px; background: white; border-radius: 24px; margin-bottom: 32px; border: 2px dashed #cbd5e1; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); transform: scale(0.98);">
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <div style="width: 56px; height: 56px; background: var(--primary); color: white; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; box-shadow: 0 10px 15px -3px rgba(200, 155, 60, 0.3);">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <h4 id="customerNameDisplay" style="color: var(--text-dark); font-size: 1.25rem; font-weight: 900; letter-spacing: -0.5px;">-</h4>
+                        <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+                            <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Joriy balans:</span>
+                            <span id="currentPointsDisplay" style="color: #059669; font-weight: 900; background: #f0fdf4; padding: 2px 8px; border-radius: 6px; font-size: 0.9rem;">0</span>
+                            <span style="font-size: 0.75rem; color: #059669; font-weight: 800;">BALL</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 40px;">
+                <label style="font-weight: 800; color: var(--text-dark); display: block; margin-bottom: 12px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Qo'shiladigan Miqdor</label>
+                <div style="position: relative;">
+                    <i class="fas fa-plus-circle" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: #94a3b8;"></i>
+                    <input type="number" name="amount" class="form-control" placeholder="Masalan: 500" required style="padding: 20px 20px 20px 56px; border-radius: 16px; border: 1px solid #e2e8f0; width: 100%; font-weight: 700; font-size: 1.1rem; background: #f8fafc;">
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary" style="width: 100%; padding: 24px; border-radius: 20px; font-weight: 900; font-size: 1.1rem; box-shadow: 0 20px 25px -5px rgba(37,99,235,0.25);">
+                Ballarni Tasdiqlash <i class="fas fa-check-double" style="margin-left: 10px;"></i>
+            </button>
+        </form>
+    </div>
+    
+    <div style="margin-top: 40px; text-align: center;">
+        <p style="color: var(--text-muted); font-size: 0.9rem; font-weight: 600;">
+            ID raqamini topolmayapsizmi? <a href="{% url 'admin_customers' %}" style="color: var(--primary); font-weight: 800; text-decoration: none;">Mijozlar ro'yxatiga o'tish</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const checkBtn = document.getElementById('checkCustomerBtn');
+    const idInput = document.getElementById('customerIdInput');
+    const preview = document.getElementById('customerPreview');
+    const nameDisplay = document.getElementById('customerNameDisplay');
+    const pointsDisplay = document.getElementById('currentPointsDisplay');
+
+    checkBtn.addEventListener('click', async () => {
+        const id = idInput.value;
+        if (!id) return;
+
+        checkBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        checkBtn.disabled = true;
+
+        try {
+            const response = await fetch(`{% url 'get_customer_info' %}?id=${id}`);
+            const data = await response.json();
+
+            if (data.success) {
+                nameDisplay.innerText = data.name;
+                pointsDisplay.innerText = data.current_points.toLocaleString();
+                preview.style.display = 'block';
+                preview.style.transform = 'scale(1)';
+            } else {
+                preview.style.display = 'none';
+                alert(data.error || 'Xatolik!');
+            }
+        } catch (error) {
+            alert('Xato!');
+        } finally {
+            checkBtn.innerHTML = 'Tekshirish';
+            checkBtn.disabled = false;
+        }
+    });
+</script>
+{% endblock %}

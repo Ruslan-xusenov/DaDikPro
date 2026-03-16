@@ -1,0 +1,173 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dadik Pro — Mijozlar bazasi va Marketing platformasi{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Gloock&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <style>
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .theme-toggle, .lang-switcher {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            color: var(--text-dark);
+            transition: var(--transition);
+        }
+        
+        .theme-toggle:hover, .lang-switcher:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .lang-dropdown {
+            position: absolute;
+            top: 60px;
+            right: 0;
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1001;
+            min-width: 150px;
+        }
+
+        .lang-dropdown.show {
+            display: flex;
+        }
+
+        .lang-item {
+            padding: 12px 20px;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .lang-item:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    {% if not hide_nav %}
+    <nav class="navbar">
+        <div class="container" style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+            <a href="{% url 'home' %}" class="logo">
+                <i class="fas fa-chart-line"></i> DADIK<span>PRO</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}" class="nav-link">{% trans "Bosh sahifa" %}</a></li>
+                <li><a href="{% url 'bonus' %}" class="nav-link">{% trans "Bonus tizimi" %}</a></li>
+                <li><a href="{% url 'news' %}" class="nav-link">{% trans "Aksiyalar" %}</a></li>
+                <li><a href="{% url 'support' %}" class="nav-link">{% trans "Yordam" %}</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div style="position: relative; display: flex; gap: 8px;">
+                    <button class="lang-switcher" onclick="toggleLangDropdown()">
+                        <i class="fas fa-globe"></i>
+                    </button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <form id="langForm" action="{% url 'set_language' %}" method="post" style="display: flex; flex-direction: column;">
+                            {% csrf_token %}
+                            <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                            <button type="button" class="lang-item" onclick="submitLang('uz')">O'zbekcha</button>
+                            <button type="button" class="lang-item" onclick="submitLang('ru')">Русский</button>
+                            <button type="button" class="lang-item" onclick="submitLang('en')">English</button>
+                        </form>
+                    </div>
+                    <script>
+                        function submitLang(val) {
+                            const form = document.getElementById('langForm');
+                            const input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = 'language';
+                            input.value = val;
+                            form.appendChild(input);
+                            form.submit();
+                        }
+                    </script>
+                    <div class="theme-toggle" id="themeBtn">
+                        <i class="fas fa-moon"></i>
+                    </div>
+                </div>
+
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="btn-primary" style="padding: 12px 24px; border-radius: 12px;">{% trans "Dashboard" %}</a>
+                {% else %}
+                    <a href="{% url 'home' %}#register" class="btn-primary" style="padding: 12px 24px; border-radius: 12px;">{% trans "A'zo bo'lish" %}</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    {% endif %}
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    {% if not hide_footer %}
+    <footer style="background: var(--bg-light); padding: 100px 0; border-top: 1px solid var(--border-color); position: relative;">
+        <div style="position: absolute; top: -1px; left: 0; width: 100%; height: 100%; pointer-events: none; background: radial-gradient(circle at top right, var(--primary-light) 0%, transparent 40%); opacity: 0.3;"></div>
+        <div class="container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 60px; position: relative;">
+            <div>
+                <div class="logo" style="margin-bottom: 32px; font-size: 1.8rem;">
+                    <i class="fas fa-chart-line" style="color: var(--primary);"></i> DADIK<span style="color: var(--primary);">PRO</span>
+                </div>
+                <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.7; font-family: 'Outfit', sans-serif;">{% trans "Mijozlar bazasini boshqarish va marketing kampaniyalarini avtomatlashtirish uchun mukammal yechim." %}</p>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 32px; color: var(--text-dark); font-size: 1.25rem; font-weight: 800;">{% trans "Foydali havolalar" %}</h4>
+                <ul style="display: flex; flex-direction: column; gap: 16px;">
+                    <li><a href="{% url 'home' %}" class="text-muted" style="transition: color 0.3s;">{% trans "Bosh sahifa" %}</a></li>
+                    <li><a href="{% url 'bonus' %}" class="text-muted" style="transition: color 0.3s;">{% trans "Bonus tizimi" %}</a></li>
+                    <li><a href="{% url 'news' %}" class="text-muted" style="transition: color 0.3s;">{% trans "Aksiyalar va Yangiliklar" %}</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 32px; color: var(--text-dark); font-size: 1.25rem; font-weight: 800;">{% trans "Bog'lanish" %}</h4>
+                <ul style="display: flex; flex-direction: column; gap: 16px;">
+                    <li><a href="https://t.me/dadikpro" class="text-muted" style="display: flex; align-items: center;"><i class="fab fa-telegram" style="color: #0088cc; font-size: 1.2rem; margin-right: 12px; width: 24px;"></i> @dadikpro</a></li>
+                    <li><a href="tel:+998880374444" class="text-muted" style="display: flex; align-items: center;"><i class="fas fa-phone" style="color: var(--primary); font-size: 1.2rem; margin-right: 12px; width: 24px;"></i> +998 88 037 44 44</a></li>
+                    <li><a href="#" class="text-muted" style="display: flex; align-items: center;"><i class="fab fa-instagram" style="color: #e1306c; font-size: 1.2rem; margin-right: 12px; width: 24px;"></i> dadik_pro</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="container" style="margin-top: 80px; padding-top: 40px; border-top: 1px solid var(--border-color); text-align: center; color: var(--text-muted); font-size: 1rem; opacity: 0.6;">
+            <p>&copy; 2024 Dadik Pro. {% trans "Barcha huquqlar himoyalangan." %}</p>
+        </div>
+    </footer>
+    {% endif %}
+
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
