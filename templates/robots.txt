@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /django-admin/
+Disallow: /dashboard/
+Disallow: /login/
+Disallow: /logout/
+Disallow: /register/
+Disallow: /i18n/
+
+Sitemap: http://91.107.215.217/sitemap.xml

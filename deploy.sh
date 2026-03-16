@@ -56,11 +56,12 @@ if [ "$CHOICE" == "2" ]; then
         echo "ESKIZ_PASSWORD=$ESKIZ_PASSWORD" >> .env
         echo "ESKIZ_SENDER=4546" >> .env
     fi
-
+    # Django amallari
     python manage.py migrate
     python manage.py collectstatic --noinput
     python manage.py compilemessages
 
+    # Systemd service yaratish
     echo -e "${GREEN}>>> Systemd service yaratilmoqda...${NC}"
     sudo bash -c "cat > /etc/systemd/system/$PROJECT_NAME.service <<EOF
 [Unit]
@@ -71,28 +72,37 @@ After=network.target
 User=$(whoami)
 Group=www-data
 WorkingDirectory=$PROJECT_DIR
-ExecStart=$PROJECT_DIR/venv/bin/gunicorn --access-logfile - --workers 3 --bind unix:$PROJECT_DIR/$PROJECT_NAME.sock core.wsgi:application
+Environment=\"PATH=$PROJECT_DIR/venv/bin\"
+ExecStart=$PROJECT_DIR/venv/bin/gunicorn --access-logfile - --error-logfile $PROJECT_DIR/gunicorn_error.log --workers 3 --bind unix:$PROJECT_DIR/$PROJECT_NAME.sock core.wsgi:application
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
 EOF"
 
+    sudo systemctl daemon-reload
     sudo systemctl start $PROJECT_NAME
     sudo systemctl enable $PROJECT_NAME
 
+    # Nginx config
     echo -e "${GREEN}>>> Nginx config yaratilmoqda...${NC}"
     sudo bash -c "cat > /etc/nginx/sites-available/$PROJECT_NAME <<EOF
 server {
     listen 80;
     server_name 91.107.215.217;
 
+    client_max_body_size 100M;
+
     location = /favicon.ico { access_log off; log_not_found off; }
+    
     location /static/ {
-        root $PROJECT_DIR;
+        alias $PROJECT_DIR/staticfiles/;
+        expires 30d;
+        add_header Cache-Control \"public, no-transform\";
     }
 
     location /media/ {
-        root $PROJECT_DIR;
+        alias $PROJECT_DIR/media/;
     }
 
     location / {
@@ -124,6 +134,8 @@ elif [ "$CHOICE" == "1" ]; then
     
     python manage.py compilemessages
 
+    # Service qayta ishga tushirish
+    sudo systemctl daemon-reload
     sudo systemctl restart $PROJECT_NAME
     sudo systemctl restart nginx
 
