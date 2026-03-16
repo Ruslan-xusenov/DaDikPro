@@ -61,7 +61,7 @@ if [ "$CHOICE" == "2" ]; then
         # PostgreSQL sozlamalari
         DB_NAME="dadikpro"
         DB_USER="dadikuser"
-        DB_PASS=$(openssl rand -base64 12)
+        DB_PASS=$(openssl rand -hex 12)
         
         echo -e "${GREEN}>>> Database sozlanmoqda...${NC}"
         sudo -u postgres psql -c "CREATE DATABASE $DB_NAME;" || echo "Database allaqachon mavjud"
@@ -140,7 +140,7 @@ server {
 }
 EOF"
 
-    sudo ln -s /etc/nginx/sites-available/$PROJECT_NAME /etc/nginx/sites-enabled/
+    sudo ln -sf /etc/nginx/sites-available/$PROJECT_NAME /etc/nginx/sites-enabled/
     sudo nginx -t && sudo systemctl restart nginx
 
     echo -e "${GREEN}>>> Muvaffaqiyatli yakunlandi! Sayt manzili: http://91.107.215.217${NC}"
