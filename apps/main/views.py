@@ -4,6 +4,9 @@ from apps.customers.models import Customer
 from apps.marketing.models import Banner, News
 from django.views.decorators.csrf import csrf_exempt
 
+def welcome(request):
+    return render(request, 'main/welcome.html', {'hide_nav': True, 'hide_footer': True})
+
 def home(request):
     banners = Banner.objects.all().order_by('-created_at')
     customer_id = request.session.get('customer_id')

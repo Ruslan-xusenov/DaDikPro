@@ -131,7 +131,7 @@ EOF"
 
     # Nginx config
     echo -e "${GREEN}>>> Nginx config yaratilmoqda...${NC}"
-    DOMAIN="sms.ruslandev.uz"
+    DOMAIN="sms.nextmarket.uz"
     sudo bash -c "cat > /etc/nginx/sites-available/$PROJECT_NAME <<EOF
 server {
     listen 80;
