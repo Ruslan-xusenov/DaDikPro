@@ -44,7 +44,9 @@ def register_customer(request):
         existing_customer = Customer.objects.filter(phone=phone).first()
         if existing_customer:
             request.session['customer_id'] = existing_customer.id
-            return JsonResponse({'message': 'Siz allaqachon ro\'yxatdan o\'tgansiz, tizimga kirildi'}, status=200)
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'message': 'Siz allaqachon ro\'yxatdan o\'tgansiz, tizimga kirildi'}, status=200)
+            return redirect('home')
 
         try:
             customer = Customer.objects.create(
@@ -54,9 +56,13 @@ def register_customer(request):
                 telegram=telegram
             )
             request.session['customer_id'] = customer.id
-            return JsonResponse({'message': 'Muvaffaqiyatli ro\'yxatdan o\'tdingiz'}, status=201)
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'message': 'Muvaffaqiyatli ro\'yxatdan o\'tdingiz'}, status=201)
+            return redirect('home')
         except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'error': str(e)}, status=500)
+            return render(request, 'main/welcome.html', {'error': str(e), 'hide_nav': True, 'hide_footer': True})
 
     return JsonResponse({'error': 'Noto\'g\'ri so\'rov usuli'}, status=405)
 
