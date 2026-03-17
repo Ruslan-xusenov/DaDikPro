@@ -97,51 +97,49 @@
 <body>
     {% if not hide_nav %}
     <nav class="navbar">
-        <div class="container" style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+        <div class="container navbar-container">
             <a href="{% url 'home' %}" class="logo">
                 <i class="fas fa-chart-line"></i> DADIK<span>PRO</span>
             </a>
-            <ul class="nav-links">
-                <li><a href="{% url 'home' %}" class="nav-link">{% trans "Bosh sahifa" %}</a></li>
-                <li><a href="{% url 'bonus' %}" class="nav-link">{% trans "Bonus tizimi" %}</a></li>
-                <li><a href="{% url 'news' %}" class="nav-link">{% trans "Aksiyalar" %}</a></li>
-                <li><a href="{% url 'support' %}" class="nav-link">{% trans "Yordam" %}</a></li>
-            </ul>
-            <div class="nav-actions">
-                <div style="position: relative; display: flex; gap: 8px;">
-                    <button class="lang-switcher" onclick="toggleLangDropdown()">
-                        <i class="fas fa-globe"></i>
-                    </button>
-                    <div class="lang-dropdown" id="langDropdown">
-                        <form id="langForm" action="{% url 'set_language' %}" method="post" style="display: flex; flex-direction: column;">
-                            {% csrf_token %}
-                            <input name="next" type="hidden" value="{{ request.get_full_path }}">
-                            <button type="button" class="lang-item" onclick="submitLang('uz')">O'zbekcha</button>
-                            <button type="button" class="lang-item" onclick="submitLang('ru')">Русский</button>
-                            <button type="button" class="lang-item" onclick="submitLang('en')">English</button>
-                        </form>
-                    </div>
-                    <script>
-                        function submitLang(val) {
-                            const form = document.getElementById('langForm');
-                            const input = document.createElement('input');
-                            input.type = 'hidden';
-                            input.name = 'language';
-                            input.value = val;
-                            form.appendChild(input);
-                            form.submit();
-                        }
-                    </script>
-                    <div class="theme-toggle" id="themeBtn">
-                        <i class="fas fa-moon"></i>
-                    </div>
-                </div>
+            
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
 
-                {% if user.is_authenticated %}
-                    <a href="{% url 'dashboard' %}" class="btn-primary" style="padding: 12px 24px; border-radius: 12px;">{% trans "Dashboard" %}</a>
-                {% else %}
-                    <a href="{% url 'home' %}#register" class="btn-primary" style="padding: 12px 24px; border-radius: 12px;">{% trans "A'zo bo'lish" %}</a>
-                {% endif %}
+            <div class="nav-menu" id="navMenu">
+                <ul class="nav-links">
+                    <li><a href="{% url 'home' %}" class="nav-link">{% trans "Bosh sahifa" %}</a></li>
+                    <li><a href="{% url 'bonus' %}" class="nav-link">{% trans "Bonus tizimi" %}</a></li>
+                    <li><a href="{% url 'news' %}" class="nav-link">{% trans "Aksiyalar" %}</a></li>
+                    <li><a href="{% url 'support' %}" class="nav-link">{% trans "Yordam" %}</a></li>
+                </ul>
+                <div class="nav-actions">
+                    <div style="position: relative; display: flex; gap: 8px;">
+                        <button class="lang-switcher" onclick="toggleLangDropdown()">
+                            <i class="fas fa-globe"></i>
+                        </button>
+                        <div class="lang-dropdown" id="langDropdown">
+                            <form id="langForm" action="{% url 'set_language' %}" method="post" style="display: flex; flex-direction: column;">
+                                {% csrf_token %}
+                                <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                                <button type="button" class="lang-item" onclick="submitLang('uz')">O'zbekcha</button>
+                                <button type="button" class="lang-item" onclick="submitLang('ru')">Русский</button>
+                                <button type="button" class="lang-item" onclick="submitLang('en')">English</button>
+                            </form>
+                        </div>
+                        <div class="theme-toggle" id="themeBtn">
+                            <i class="fas fa-moon"></i>
+                        </div>
+                    </div>
+
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'dashboard' %}" class="btn-primary" style="padding: 12px 24px; border-radius: 12px;">{% trans "Dashboard" %}</a>
+                    {% else %}
+                        <a href="{% url 'home' %}#register" class="btn-primary" style="padding: 12px 24px; border-radius: 12px;">{% trans "A'zo bo'lish" %}</a>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </nav>

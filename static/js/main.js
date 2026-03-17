@@ -10,6 +10,18 @@ window.toggleLangDropdown = function() {
     }
 };
 
+window.submitLang = function(val) {
+    const form = document.getElementById('langForm');
+    if (form) {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'language';
+        input.value = val;
+        form.appendChild(input);
+        form.submit();
+    }
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     // Theme Logic
     const themeBtn = document.getElementById('themeBtn');
@@ -41,6 +53,27 @@ document.addEventListener('DOMContentLoaded', () => {
             dropdown.classList.remove('show');
         }
     });
+
+    // Mobile Menu Toggle
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('navMenu');
+    
+    if (hamburger && navMenu) {
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+            body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : 'auto';
+        });
+
+        // Close menu when a link is clicked
+        navMenu.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+                body.style.overflow = 'auto';
+            });
+        });
+    }
 
     // Mobile Sidebar Toggle (Dashboard)
     const sidebar = document.querySelector('.sidebar');
