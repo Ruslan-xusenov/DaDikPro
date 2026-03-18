@@ -1,0 +1,37 @@
+[2026-03-17 14:18:37 -0400] [117630] [INFO] Starting gunicorn 25.1.0
+[2026-03-17 14:18:37 -0400] [117630] [INFO] Listening at: unix:/home/kali/Desktop/projects/Django/dadikpro/dadikpro.sock (117630)
+[2026-03-17 14:18:37 -0400] [117630] [INFO] Using worker: sync
+[2026-03-17 14:18:37 -0400] [117630] [INFO] Control socket listening at /home/kali/Desktop/projects/Django/dadikpro/gunicorn.ctl
+[2026-03-17 14:18:37 -0400] [117659] [INFO] Booting worker with pid: 117659
+[2026-03-17 14:18:37 -0400] [117686] [INFO] Booting worker with pid: 117686
+[2026-03-17 14:18:37 -0400] [117687] [INFO] Booting worker with pid: 117687
+[2026-03-17 14:19:38 -0400] [117630] [INFO] Handling signal: term
+[2026-03-17 23:19:38 +0500] [117686] [INFO] Worker exiting (pid: 117686)
+[2026-03-17 23:19:38 +0500] [117659] [INFO] Worker exiting (pid: 117659)
+[2026-03-17 23:19:38 +0500] [117687] [INFO] Worker exiting (pid: 117687)
+[2026-03-17 14:19:38 -0400] [117630] [INFO] Worker (pid:117659) was sent SIGTERM!
+[2026-03-17 14:19:38 -0400] [117630] [INFO] Worker (pid:117686) was sent SIGTERM!
+[2026-03-17 14:19:38 -0400] [117630] [INFO] Worker (pid:117687) was sent SIGTERM!
+[2026-03-17 14:19:38 -0400] [117630] [INFO] Shutting down: Master
+[2026-03-17 14:19:38 -0400] [119252] [INFO] Starting gunicorn 25.1.0
+[2026-03-17 14:19:38 -0400] [119252] [INFO] Listening at: unix:/home/kali/Desktop/projects/Django/dadikpro/dadikpro.sock (119252)
+[2026-03-17 14:19:38 -0400] [119252] [INFO] Using worker: sync
+[2026-03-17 14:19:38 -0400] [119305] [INFO] Booting worker with pid: 119305
+[2026-03-17 14:19:38 -0400] [119252] [INFO] Control socket listening at /home/kali/Desktop/projects/Django/dadikpro/gunicorn.ctl
+[2026-03-17 14:19:38 -0400] [119306] [INFO] Booting worker with pid: 119306
+[2026-03-17 14:19:38 -0400] [119315] [INFO] Booting worker with pid: 119315
+[2026-03-17 23:20:30 +0500] [119306] [INFO] Worker exiting (pid: 119306)
+[2026-03-17 14:20:30 -0400] [119252] [INFO] Handling signal: term
+[2026-03-17 23:20:30 +0500] [119305] [INFO] Worker exiting (pid: 119305)
+[2026-03-17 23:20:30 +0500] [119315] [INFO] Worker exiting (pid: 119315)
+[2026-03-17 14:20:30 -0400] [119252] [INFO] Worker (pid:119305) was sent SIGTERM!
+[2026-03-17 14:20:30 -0400] [119252] [INFO] Worker (pid:119306) was sent SIGTERM!
+[2026-03-17 14:20:30 -0400] [119252] [INFO] Worker (pid:119315) was sent SIGTERM!
+[2026-03-17 14:20:30 -0400] [119252] [INFO] Shutting down: Master
+[2026-03-18 10:22:24 -0400] [929] [INFO] Starting gunicorn 25.1.0
+[2026-03-18 10:22:24 -0400] [929] [INFO] Listening at: unix:/home/kali/Desktop/projects/Django/dadikpro/dadikpro.sock (929)
+[2026-03-18 10:22:24 -0400] [929] [INFO] Using worker: sync
+[2026-03-18 10:22:24 -0400] [929] [INFO] Control socket listening at /home/kali/Desktop/projects/Django/dadikpro/gunicorn.ctl
+[2026-03-18 10:22:24 -0400] [971] [INFO] Booting worker with pid: 971
+[2026-03-18 10:22:24 -0400] [972] [INFO] Booting worker with pid: 972
+[2026-03-18 10:22:24 -0400] [975] [INFO] Booting worker with pid: 975
