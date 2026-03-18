@@ -73,8 +73,8 @@ if [ "$CHOICE" == "2" ]; then
         echo "DEBUG=False" >> .env
         
         # PostgreSQL sozlamalari
-        DB_NAME="dadikpro"
-        DB_USER="dadikuser"
+        DB_NAME="dadikpro_db"
+        DB_USER="dadikpro_user"
         DB_PASS=$(openssl rand -hex 12)
         
         echo -e "${GREEN}>>> Database sozlanmoqda...${NC}"
@@ -86,7 +86,7 @@ if [ "$CHOICE" == "2" ]; then
         sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME TO $DB_USER;"
         sudo -u postgres psql -c "ALTER DATABASE $DB_NAME OWNER TO $DB_USER;"
 
-        echo "DATABASE_URL=postgres://$DB_USER:$DB_PASS@localhost:5432/$DB_NAME" >> .env
+        echo "DATABASE_URL=postgres://$DB_USER:$DB_PASS@127.0.0.1:5432/$DB_NAME" >> .env
         
         echo -e "${GREEN}>>> .env fayli yaratildi.${NC}"
         # Eskiz ma'lumotlarini oling
